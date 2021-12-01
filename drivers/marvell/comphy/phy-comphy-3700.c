@@ -769,7 +769,7 @@ static int mvebu_a3700_comphy_usb3_power_on(uint8_t comphy_index,
 	/*
 	 * 15. Set capacitor value for FFE gain peaking to 0xF
 	 */
-	usb3_reg_set(reg_base, COMPHY_REG_GEN2_SETTINGS_3,
+	usb3_reg_set(reg_base, COMPHY_REG_GEN2_SET_3,
 		     COMPHY_GEN_FFE_CAP_SEL_VALUE, COMPHY_GEN_FFE_CAP_SEL_MASK);
 
 	/*
