@@ -418,10 +418,10 @@ static int mvebu_a3700_comphy_sgmii_power_on(uint8_t comphy_index,
 	 */
 	if (mode == COMPHY_SGMII_MODE) {
 		/* SGMII 1G, SerDes speed 1.25G */
-		speed_sel = SD_SPEED_1_25_G;
+		speed_sel = SERDES_SPEED_1_25GHZ;
 	} else if (mode == COMPHY_2500BASEX_MODE) {
 		/* 2500Base-X, SerDes speed 3.125G */
-		speed_sel = SD_SPEED_3_125_G;
+		speed_sel = SERDES_SPEED_3_125GHZ;
 	} else {
 		/* Other rates are not supported */
 		ERROR("unsupported SGMII speed on comphy lane%d\n",
@@ -429,8 +429,7 @@ static int mvebu_a3700_comphy_sgmii_power_on(uint8_t comphy_index,
 		return -EINVAL;
 	}
 	mask = GEN_RX_SEL_MASK | GEN_TX_SEL_MASK;
-	data = (speed_sel << GEN_RX_SEL_OFFSET) |
-	       (speed_sel << GEN_TX_SEL_OFFSET);
+	data = GEN_RX_SEL_VALUE(speed_sel) | GEN_TX_SEL_VALUE(speed_sel);
 	reg_set(offset, data, mask);
 
 	/*
