@@ -371,7 +371,7 @@ static int mvebu_a3700_comphy_sgmii_power_on(uint8_t comphy_index,
 					     uint32_t comphy_mode)
 {
 	int ret;
-	uint32_t mask, data;
+	uint32_t mask, data, speed_sel;
 	uintptr_t offset;
 	uintptr_t sd_ip_addr;
 	int mode = COMPHY_GET_MODE(comphy_mode);
@@ -418,12 +418,10 @@ static int mvebu_a3700_comphy_sgmii_power_on(uint8_t comphy_index,
 	 */
 	if (mode == COMPHY_SGMII_MODE) {
 		/* SGMII 1G, SerDes speed 1.25G */
-		data |= SD_SPEED_1_25_G << GEN_RX_SEL_OFFSET;
-		data |= SD_SPEED_1_25_G << GEN_TX_SEL_OFFSET;
+		speed_sel = SD_SPEED_1_25_G;
 	} else if (mode == COMPHY_2500BASEX_MODE) {
 		/* 2500Base-X, SerDes speed 3.125G */
-		data |= SD_SPEED_3_125_G << GEN_RX_SEL_OFFSET;
-		data |= SD_SPEED_3_125_G << GEN_TX_SEL_OFFSET;
+		speed_sel = SD_SPEED_3_125_G;
 	} else {
 		/* Other rates are not supported */
 		ERROR("unsupported SGMII speed on comphy lane%d\n",
@@ -431,6 +429,8 @@ static int mvebu_a3700_comphy_sgmii_power_on(uint8_t comphy_index,
 		return -EINVAL;
 	}
 	mask = GEN_RX_SEL_MASK | GEN_TX_SEL_MASK;
+	data = (speed_sel << GEN_RX_SEL_OFFSET) |
+	       (speed_sel << GEN_TX_SEL_OFFSET);
 	reg_set(offset, data, mask);
 
 	/*
